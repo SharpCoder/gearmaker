@@ -4,8 +4,6 @@ FROM debian:latest
 
 # Assumes your function is named "app.js", and there is a package.json file in the app directory 
 COPY app /
-RUN touch hi
-
 RUN apt-get update
 RUN apt-get install -y curl
 
@@ -20,11 +18,6 @@ RUN apt-get install -y \
 
 # Install NPM dependencies for function
 RUN npm install
-
-# Install openscad
-# RUN yum install flatpak
-# RUN flatpak remote-add flathub https://flathub.org/repo/flathub.flatpakrepo
-# RUN flatpak install flathub org.openscad.OpenSCAD -y
 
 # Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
 CMD [ "node", "app.js" ]  
