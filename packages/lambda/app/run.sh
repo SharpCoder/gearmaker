@@ -1,8 +1,9 @@
-#!/bin/sh
+#!/bin/bash
+
+echo "hello"
 
 # First parameter is file input
 INPUT=$1
-
 # Second parameter is file output
 OUTPUT=$2
 
