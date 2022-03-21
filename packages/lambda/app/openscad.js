@@ -4,17 +4,45 @@ const uuid = require('uuid');
 
 /// Given some openscad code, generate an stl file
 function convert_scad(code, filetype) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         const id = uuid.v4();
-        const input_file = `request-${id}.scad`;
-        const output_file = `response-${id}.${filetype}`;
-        fs.writeFileSync(`./request-${id}.scad`, code);
+        const input_file = `/tmp/request-${id}.scad`;
+        const output_file = `/tmp/response-${id}.${filetype}`;
+        fs.writeFileSync(`/tmp/request-${id}.scad`, code);
         const proc = spawn('openscad', ['-o', output_file, '--autocenter', '--projection', 'p', '--viewall', '--colorscheme', 'DeepOcean', input_file]);
-        proc.on('exit', () => {
-            const contents = fs.readFileSync('./' + output_file);
-            fs.rmSync('./' + input_file);
-            fs.rmSync('./' + output_file);
-            resolve(contents);
+    
+        proc.stdout.on('data', (data) => {
+            console.log(data);
+        });
+
+        proc.stderr.on('data', function(data) {
+            //Here is where the error output goes
+            console.log('stderr: ' + data);
+        });
+
+        proc.on('error', (err) => {
+            console.error('error invoking openscad', err);
+        });
+
+        proc.on('close', (code) => {
+            console.log(`openscad exited with code ${code}`);
+
+            const fileExists = fs.existsSync(output_file);
+            console.log({ fileExists });
+
+            const stats = fs.statSync(output_file);
+            console.log({ stats });
+
+            fs.readFile(output_file, (err, contents) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    fs.rmSync(input_file);
+                    fs.rmSync(output_file);
+                    resolve(contents);
+                }
+            });
+
         });
     });
 }
@@ -141,66 +169,10 @@ linear_extrude(${depth})
 difference() {
     spur_gear(N=${N}, P=${P}, pa=${pressureAngle});
     circle(d=${b}, $fn=100);
+}`;
 }
-    `;
-}
 
-module.exports = function(app) {
-    app.get('/spur/preview', (req, res) => {
-        const { teeth, pitch, bore = 6, pa = 14.5, thickness = 6 } = req.query;
-        const code = generate_gear_code({
-            teeth, 
-            pitch, 
-            bore, 
-            pa, 
-            thickness,
-        });
-        
-        convert_scad(code, 'png').then(img => {
-            res.writeHead(200, {
-                'Content-Type': 'image/png',
-                'Content-Length': img.length
-            });
-            res.end(img);
-        });
-    });
-
-    app.get('/spur/stl', (req, res) => {
-        const { teeth, pitch, bore = 6, pa = 14.5, thickness = 6 } = req.query;
-        const params = {
-            teeth: parseInt(teeth), 
-            pitch: parseFloat(pitch), 
-            bore: parseFloat(bore), 
-            pa: parseFloat(pa), 
-            thickness: parseFloat(thickness),
-        };
-
-        const code = generate_gear_code(params);
-
-        // Create the file name
-        const fileName = `SpurGear-T${params.teeth}-P${params.pitch}-pA${params.pa}-b${params.bore}-${params.thickness}mm.stl`;
-
-        convert_scad(code, 'stl').then(stl => {
-            res.writeHead(200, {
-                'Content-Type': 'application/stl',
-                'Content-disposition': 'attachment; filename=' + fileName,
-                'Content-Length': stl.length,
-            });
-            res.end(stl);
-        });
-    });
-
-    app.get('/spur/code', (req, res) => {
-        const { teeth, pitch, bore = 6, pa = 14.5, thickness = 6 } = req.query;
-        const code = generate_gear_code({
-            teeth, 
-            pitch, 
-            bore, 
-            pa, 
-            thickness,
-        });
-
-        res.writeHead(200);
-        res.end(code);
-    });
+module.exports = {
+    generate_gear_code,
+    convert_scad,
 };
