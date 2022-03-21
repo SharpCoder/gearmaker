@@ -9,20 +9,21 @@ function convert_scad(code, filetype) {
         const input_file = `/tmp/request-${id}.scad`;
         const output_file = `/tmp/response-${id}.${filetype}`;
         fs.writeFileSync(`/tmp/request-${id}.scad`, code);
-        const proc = spawn('openscad', ['-o', output_file, '--colorscheme', 'DeepOcean', input_file]);
+
+        const proc = spawn('./run.sh', [input_file, output_file]);
     
-        // proc.stdout.on('data', (data) => {
-        //     console.log(data);
-        // });
+        proc.stdout.on('data', (data) => {
+            console.log(data);
+        });
 
-        // proc.stderr.on('data', function(data) {
-        //     //Here is where the error output goes
-        //     console.log('stderr: ' + data);
-        // });
+        proc.stderr.on('data', function(data) {
+            //Here is where the error output goes
+            console.log('stderr: ' + data);
+        });
 
-        // proc.on('error', (err) => {
-        //     console.error('error invoking openscad', err);
-        // });
+        proc.on('error', (err) => {
+            console.error('error invoking openscad', err);
+        });
 
         proc.on('close', (code) => {
             console.log(`openscad exited with code ${code}`);

@@ -1,7 +1,7 @@
 
 const express = require('express');
 const app = express();
-const port = 8080;
+const port = 9006;
 
 // Configure the routes
 const { generate_gear_code, convert_scad } = require('./openscad.js');
