@@ -6,6 +6,9 @@ INPUT=$1
 # Second parameter is file output
 OUTPUT=$2
 
+echo "Input file $INPUT"
+echo "Output file $OUTPUT"
+
 # Kill al Xvfb processes
 ps aux | grep Xvfb | awk '{system("kill "$2)}'
 rm -rf /tmp/.X99-lock 

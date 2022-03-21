@@ -8,7 +8,8 @@ function convert_scad(code, filetype) {
         const id = uuid.v4();
         const input_file = `/tmp/request-${id}.scad`;
         const output_file = `/tmp/response-${id}.${filetype}`;
-        fs.writeFileSync(`/tmp/request-${id}.scad`, code);
+        
+        fs.writeFileSync(input_file, code);
 
         const proc = spawn('./run.sh', [input_file, output_file]);
     
