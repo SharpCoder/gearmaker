@@ -11,7 +11,7 @@ function convert_scad(code, filetype) {
         
         fs.writeFileSync(input_file, code);
 
-        const proc = spawn('./run.sh', [input_file, output_file]);
+        const proc = spawn('openscad', ['-o', output_file,'--colorscheme', 'DeepOcean', input_file]);
     
         proc.stdout.on('data', (data) => {
             console.log(data);
