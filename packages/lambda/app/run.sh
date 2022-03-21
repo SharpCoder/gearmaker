@@ -11,4 +11,4 @@ ps aux | grep Xvfb | awk '{system("kill "$2)}'
 rm -rf /tmp/.X99-lock 
 
 export DISPLAY=:99
-Xvfb :99 -screen 0 800x600x24 -once& openscad -i $OUTPUT --colorscheme DeepOcean $INPUT
+Xvfb :99 -screen 0 800x600x24 -once& openscad -o $OUTPUT --colorscheme DeepOcean $INPUT
