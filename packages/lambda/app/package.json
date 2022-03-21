@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.1096.0",
     "axios": "^0.26.1",
     "express": "^4.17.3",
     "form-data": "^4.0.0",

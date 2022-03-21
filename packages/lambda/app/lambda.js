@@ -1,11 +1,12 @@
 const axios = require('axios').default;
 const FormData = require('form-data');
-
+// ES5 example
 const { generate_gear_code, convert_scad } = require('./openscad.js');
 
 const AWS_LAMBDA_RUNTIME_API = process.env.AWS_LAMBDA_RUNTIME_API ?? '';
 const API = AWS_LAMBDA_RUNTIME_API.substring(0, AWS_LAMBDA_RUNTIME_API.indexOf(':'));
 const PORT = AWS_LAMBDA_RUNTIME_API.substring(API.length + 1);
+
 
 function handler({
     debug,
@@ -22,34 +23,35 @@ function handler({
         pa, 
         thickness,
     });
-
-    console.log({ requestId, path, queryStringParameters });
-
-    return new Promise((resolve) => {    
-        if (path === '/spur/stl') {
-            const params = {
-                teeth: parseInt(teeth), 
-                pitch: parseFloat(pitch), 
-                bore: parseFloat(bore), 
-                pa: parseFloat(pa), 
-                thickness: parseFloat(thickness),
-            };
     
+    const params = {
+        teeth: parseInt(teeth), 
+        pitch: parseFloat(pitch), 
+        bore: parseFloat(bore), 
+        pa: parseFloat(pa), 
+        thickness: parseFloat(thickness),
+    };
+    const fileName = `SpurGear-T${params.teeth}-P${params.pitch}-pA${params.pa}-b${params.bore}-${params.thickness}mm.stl`;
+
+    return new Promise(async (resolve) => {    
+        if (path === '/spur/stl') {
             // Create the file name
-            const fileName = `SpurGear-T${params.teeth}-P${params.pitch}-pA${params.pa}-b${params.bore}-${params.thickness}mm.stl`;
             convert_scad(code, 'stl').then(async stl => {
-                // await result(requestId, stl.toString(), {
-                //     'Content-Type': 'application/stl',
-                //     'Content-Disposition': 'attachment; filename=' + fileName
-                // });
+                convert_scad(code, 'stl').then(async img => {
+                    const base64Data = img.toString('base64');
+                    await result(debug, requestId, {
+                        data: base64Data
+                    }, {
+                        'Content-Type': 'application/json',
+                    }).finally(resolve);
+                });
             });
         } else if (path === '/spur/preview') {            
+            // Get the fileName
             convert_scad(code, 'png').then(async img => {
                 const base64Data = img.toString('base64');
-                console.log(base64Data);
-                console.log(img.length);
                 await result(debug, requestId, {
-                    content: base64Data
+                    data: base64Data
                 }, {
                     'Content-Type': 'application/json',
                 }).finally(resolve);
