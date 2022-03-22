@@ -10,6 +10,7 @@
         margin-left: auto;
         margin-right: auto;
         height: 100%;
+        min-height: 80vh;
     }
 </style>
 

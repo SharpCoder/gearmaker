@@ -17,7 +17,7 @@
     }
 
     function viewCode() {
-        window.location.assign(`https://api.3dgearmaker.com/gearmaker/spur/code?teeth=${T}&pitch=${P}&pressureAngle=${pA}&bore=${bore}&thickness=${thickness}`);
+        window.location.assign(`https://api.3dgearmaker.com/gearmaker/spur/code?teeth=${T}&pitch=${P}&pa=${pA}&bore=${bore}&thickness=${thickness}`);
     }
 
 </script>
@@ -77,14 +77,14 @@
         <div class="gear-parameters">
             <NumberInput bind:value={T} label='Teeth' name='teeth' step='1' min={15} />
             <NumberInput bind:value={P} label='Pitch' name='pitch' step='1'  />
-            <NumberInput bind:value={pA} label='Pressure Angle' name='pressureAngle' step='0.1' />
+            <NumberInput bind:value={pA} label='Pressure Angle' name='pa' step='0.1' />
             <NumberInput bind:value={bore} label='Bore' name='bore' step='0.1' />
             <NumberInput bind:value={thickness} label='Thickness' name='thickness' step='1' />
 
         </div>
             
         <div class="gear-preview">
-            <img alt="preview of the gear" src={`https://api.3dgearmaker.com/gearmaker/spur/preview?teeth=${T}&pitch=${P}&pressureAngle=${pA}&bore=${bore}&thickness=${thickness}`} />
+            <img alt="preview of the gear" src={`https://api.3dgearmaker.com/gearmaker/spur/preview?teeth=${T}&pitch=${P}&pa=${pA}&bore=${bore}&thickness=${thickness}`} />
         </div>
             
     </div>
