@@ -17,7 +17,7 @@
     }
 
     function viewCode() {
-        window.location.assign(`http://localhost:8080/spur/code?teeth=${T}&pitch=${P}&pressureAngle=${pA}&bore=${bore}&thickness=${thickness}`);
+        window.location.assign(`https://api.3dgearmaker.com/gearmaker/spur/code?teeth=${T}&pitch=${P}&pressureAngle=${pA}&bore=${bore}&thickness=${thickness}`);
     }
 
 </script>
@@ -72,7 +72,7 @@
     }
 </style>
 
-<form action="http://localhost:8080/spur/stl" method="GET">
+<form action="https://api.3dgearmaker.com/gearmaker/spur/stl" method="GET">
     <div class="form">    
         <div class="gear-parameters">
             <NumberInput bind:value={T} label='Teeth' name='teeth' step='1' min={15} />
@@ -84,7 +84,7 @@
         </div>
             
         <div class="gear-preview">
-            <img alt="preview of the gear" src={`http://localhost:8080/spur/preview?teeth=${T}&pitch=${P}&pressureAngle=${pA}&bore=${bore}&thickness=${thickness}`} />
+            <img alt="preview of the gear" src={`https://api.3dgearmaker.com/gearmaker/spur/preview?teeth=${T}&pitch=${P}&pressureAngle=${pA}&bore=${bore}&thickness=${thickness}`} />
         </div>
             
     </div>
