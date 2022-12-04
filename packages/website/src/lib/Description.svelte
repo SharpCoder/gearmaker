@@ -1,17 +1,26 @@
-<style>
-    content {
-        font-size: 1rem;
-    }
-</style>
+<content class="content">
+  <section>
+    Welcome to 3d gear maker! You can use this tool to generate the STL file for
+    any reasonable spur gear. If you want to customize it even more, download
+    the OpenSCAD file and change the parameters as much as you'd like.
+  </section>
 
-<content>
-    Welcome to 3d gear maker! You can use this tool to generate the STL file for any reasonable spur gear.
-    This site is entirely free and as such, I humbly request that you please do not automate/spam this API. Thank you!
-    
-    <br />
-    <br />
-
-    <b>
-        Units = mm
-    </b>
+  <b> Units = mm </b>
 </content>
+
+<style>
+  .content {
+    display: flex;
+    flex-direction: column;
+    font-size: 1rem;
+  }
+
+  section {
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+
+  b {
+    padding-bottom: 30px;
+  }
+</style>
