@@ -1,7 +1,12 @@
 <script type="ts">
-    import Description from "./Description.svelte";
-    import GearForm from "./GearForm.svelte";
+    import Description from './Description.svelte'
+    import GearForm from './GearForm.svelte'
 </script>
+
+<content>
+    <Description />
+    <GearForm />
+</content>
 
 <style>
     content {
@@ -13,8 +18,3 @@
         min-height: 80vh;
     }
 </style>
-
-<content>
-    <Description />
-    <GearForm />
-</content>

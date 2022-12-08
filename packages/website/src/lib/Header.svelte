@@ -1,6 +1,7 @@
 <script type="ts">
-
 </script>
+
+<div class="header">3D Gear Maker</div>
 
 <style>
     .header {
@@ -13,7 +14,3 @@
         justify-content: center;
     }
 </style>
-
-<div class="header">
-    3D Gear Maker
-</div>

@@ -30,16 +30,53 @@
         thickness = 6
     }
 
+    function doGenerate() {
+        disabled = true
+        failed = false
+        return new Promise((resolve, reject) => {
+            axios
+                .get(
+                    `https://tn7aauwobu7fsyqtlrph7yinhy0hmyzx.lambda-url.us-west-2.on.aws/?teeth=${T}&pitch=${P}&pa=${pA}&bore=${bore}&thickness=${thickness}`,
+                    {
+                        withCredentials: false,
+                    }
+                )
+                .then((resp) => {
+                    const { data } = resp
+                    if (data === 'hello, world!') {
+                        ts = new Date().getTime()
+                        failed = false
+                        resolve(null)
+                    } else {
+                        failed = true
+                        reject()
+                    }
+                })
+                .catch((ex) => {
+                    console.error(ex)
+                    reject()
+                })
+                .finally(() => {
+                    disabled = false
+                })
+        })
+    }
+
     function viewCode() {
-        window.location.assign(
-            `https://3dgearmaker.com/assets/files/SpurGear-T${T}-P${pitchDisplay}-pA${pADisplay}-b${boreDisplay}-${thickness}mm.scad`
-        )
+        doGenerate().then(() => {
+            window.open(
+                `https://3dgearmaker.com/assets/files/SpurGear-T${T}-P${pitchDisplay}-pA${pADisplay}-b${boreDisplay}-${thickness}mm.scad`,
+                '_blank'
+            )
+        })
     }
 
     function downloadStl() {
-        window.location.assign(
-            `https://3dgearmaker.com/assets/files/SpurGear-T${T}-P${pitchDisplay}-pA${pADisplay}-b${boreDisplay}-${thickness}mm.stl`
-        )
+        doGenerate().then(() => {
+            window.location.assign(
+                `https://3dgearmaker.com/assets/files/SpurGear-T${T}-P${pitchDisplay}-pA${pADisplay}-b${boreDisplay}-${thickness}mm.stl`
+            )
+        })
     }
 </script>
 
@@ -47,8 +84,6 @@
     <h4>Failed to generate gear with those parameters</h4>
 {:else if disabled}
     <h4>Generating preview...</h4>
-{:else}
-    <h4>&nbsp;</h4>
 {/if}
 
 <form action="https://api.3dgearmaker.com/gearmaker/spur/stl" method="GET">
@@ -80,7 +115,7 @@
         <div class="gear-preview">
             <!-- <GearPreview {P} N={T} {bore} {pA} {thickness} /> -->
 
-            <img
+            <!-- <img
                 alt="Gear preview"
                 on:load={() => {
                     failed = false
@@ -112,7 +147,7 @@
                         })
                 }}
                 src={`https://3dgearmaker.com/assets/files/SpurGear-T${T}-P${pitchDisplay}-pA${pADisplay}-b${boreDisplay}-${thickness}mm.png?invalidation=${ts}`}
-            />
+            /> -->
         </div>
     </div>
     <div class="actions">
@@ -137,25 +172,16 @@
 <style>
     form {
         flex-grow: 1;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
     }
 
     .form {
         display: flex;
-        width: 100%;
         flex-grow: 1;
         padding: 20px 0px;
-    }
-
-    .gear-preview {
-        min-width: 200px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .gear-preview img {
-        width: 200px;
-        height: 200px;
     }
 
     .button {
@@ -165,6 +191,7 @@
     }
 
     .actions {
+        padding-top: 30px;
         display: flex;
         padding-right: 20px;
     }
